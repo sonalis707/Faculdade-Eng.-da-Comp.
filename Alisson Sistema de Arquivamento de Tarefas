@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX_DESCR_LENGTH 100
+#define FILENAME "tarefas.txt"
+
+void criarTarefa();
+void mostrarTarefas();
+void limparArquivo();
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\nARQUIVAMENTO DE TAREFAS\n");
+        printf("\nMENU:\n");
+        printf("1. Adicionar tarefa\n");
+        printf("2. Mostrar tarefas\n");
+        printf("0. Sair\n");
+        printf("Escolha uma das opcoes acima:\n ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                criarTarefa();
+                break;
+            case 2:
+                mostrarTarefas();
+                break;
+            case 0:
+                limparArquivo();
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opcao invalida! Escolha uma das opcoes validas.\n");
+                break;
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
+
+void criarTarefa() {
+    FILE *arquivo;
+    char descricao[MAX_DESCR_LENGTH];
+    char data[11]; // Formato DD/MM/YYYY
+
+    printf("Descreva a tarefa:\n ");
+    getchar();
+    fgets(descricao, MAX_DESCR_LENGTH, stdin);
+
+    // Remover o caractere de nova linha da descricao
+    descricao[strcspn(descricao, "\n")] = '\0';
+
+    printf("Informe a data da tarefa (DD/MM/YYYY):\n ");
+    fgets(data, 11, stdin);
+    // Remover o caractere de nova linha da data
+    data[strcspn(data, "\n")] = '\0';
+
+    arquivo = fopen(FILENAME, "a");
+    if (arquivo == NULL) {
+        printf("nErro ao abrir o arquivo.\n");
+        return;
+    }
+
+    fprintf(arquivo, "%s - %s\n", data, descricao);
+    fclose(arquivo);
+
+    printf("Tarefa adicionada com sucesso a sua lista de tarefas!\n");
+}
+
+void mostrarTarefas() {
+    FILE *arquivo;
+    char linha[200];
+
+    arquivo = fopen(FILENAME, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    printf("LISTA COMPLETA DE TAREFAS:\n");
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        printf("-%s", linha);
+    }
+
+    fclose(arquivo);
+}
+
+void limparArquivo() {
+    FILE *arquivo = fopen(FILENAME, "w");
+    if (arquivo != NULL) {
+        fclose(arquivo);
+    }
+}
