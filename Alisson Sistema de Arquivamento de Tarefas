@@ -61,7 +61,7 @@ void criarTarefa() {
 
     arquivo = fopen(FILENAME, "a");
     if (arquivo == NULL) {
-        printf("nErro ao abrir o arquivo.\n");
+        printf("Erro ao abrir o arquivo.\n");
         return;
     }
 
